@@ -111,13 +111,13 @@ def mkdir_p(path):
             sys.exit(1)
 
 
-def clone(url, tmpdir=None):
+def clone(url, tmpdir=None, branch='master'):
     '''clone a repository from Github'''
     if tmpdir is None:
         tmpdir = tempfile.mkdtemp()
     name = os.path.basename(url).replace('.git', '')
     dest = '%s/%s' %(tmpdir,name)
-    return_code = os.system('git clone %s %s' %(url,dest))
+    return_code = os.system('git clone -b %s %s %s' %(branch, url, dest))
     if return_code == 0:
         return dest
     bot.error('Error cloning repo.')
@@ -137,29 +137,44 @@ def run_command(cmd):
 
 
 ################################################################################
-# JSON
+# File Operations
 ################################################################################
 
 
-def read_json(filename,mode='r'):
-    with open(filename,mode) as filey:
+def read_yaml(filename, mode='r', quiet=False):
+    metadata = {}
+    with open(ymlfile, mode) as stream:
+        docs = yaml.load_all(stream)
+        for doc in docs:
+            if isinstance(doc, dict):
+                for k,v in doc.items():
+                    if not quiet:
+                        print('%s: %s' %(k,v))
+                    metadata[k] = v
+    return metadata
+
+
+def read_json(filename, mode='r'):
+    with open(filename, mode) as filey:
         data = json.load(filey)
     return data
 
 
-def write_json(json_obj,filename,mode='w'):
-    with open(filename,mode) as filey:
-        filey.write(json.dumps(json_obj, sort_keys=True,indent=4, separators=(',', ': ')))
+def write_json(json_obj, filename, mode='w'):
+    with open(filename, mode) as filey:
+        filey.write(json.dumps(json_obj,
+                               sort_keys=True,
+                               indent=4, 
+                               separators=(',', ': ')))
     return filename
 
-def read_file(filename,mode='r'):
-    with open(filename,mode) as filey:
+def read_file(filename, mode='r'):
+    with open(filename, mode) as filey:
         data = filey.read()
     return data
 
-
-def write_file(filename,content,mode='w'):
-    with open(filename,mode) as filey:
+def write_file(filename, content, mode='w'):
+    with open(filename, mode) as filey:
         filey.writelines(content)
     return filename
 

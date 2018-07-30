@@ -1,5 +1,5 @@
 '''
-container.py: part of expfactory package
+container.py: part of containershare package
 
 Copyright (c) 2018, Vanessa Sochat
 All rights reserved.
@@ -31,7 +31,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 '''
 
-from expfactory.utils import (
+from containershare.utils import (
     find_directories, 
     read_json
 )

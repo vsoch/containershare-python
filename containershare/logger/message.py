@@ -1,6 +1,6 @@
 '''
 
-logger/message.py: Python logger base for expfactory
+logger/message.py: Python logger base for containershare
 
 Copyright (c) 2016-2017 Vanessa Sochat
 

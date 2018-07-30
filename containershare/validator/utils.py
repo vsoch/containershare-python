@@ -26,6 +26,11 @@ SOFTWARE.
 
 '''
 
+import re
+
 def notvalid(reason):
     print(reason)
     return False
+
+def validate_url(url):
+    return re.search("(\w+://)(.+@)*([\w\d\.]+)(:[\d]+){0,1}/*(.*)", url)
