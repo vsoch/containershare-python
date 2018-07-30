@@ -41,5 +41,5 @@ LICENSE = "LICENSE"
 
 
 INSTALL_REQUIRES = (
-    ('yaml', {'min_version': None})
+    ('pyaml', {'min_version': None}),
 )
