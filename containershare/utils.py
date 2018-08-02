@@ -143,7 +143,7 @@ def run_command(cmd):
 
 def read_yaml(filename, mode='r', quiet=False):
     metadata = {}
-    with open(ymlfile, mode) as stream:
+    with open(filename, mode) as stream:
         docs = yaml.load_all(stream)
         for doc in docs:
             if isinstance(doc, dict):

@@ -15,5 +15,6 @@ Critical items to know are:
 
 
 ## [v3.x](https://github.com/vsoch/containershare-python/tree/master) (master)
+ - adding runtime validator, and bug in utils with variable name (0.0.12)
  - adding Library and Runtime validator modules (0.0.10)
  - original generation of library
