@@ -40,6 +40,7 @@ from subprocess import (
 from containershare.logger import bot
 import shutil
 import json
+import yaml
 import tempfile
 import sys
 import os
@@ -116,7 +117,7 @@ def clone(url, tmpdir=None, branch='master'):
     if tmpdir is None:
         tmpdir = tempfile.mkdtemp()
     name = os.path.basename(url).replace('.git', '')
-    dest = '%s/%s' %(tmpdir,name)
+    dest = '%s/%s-%s' %(tmpdir, name, branch)
     return_code = os.system('git clone -b %s %s %s' %(branch, url, dest))
     if return_code == 0:
         return dest
@@ -144,7 +145,7 @@ def run_command(cmd):
 def read_yaml(filename, mode='r', quiet=False):
     metadata = {}
     with open(filename, mode) as stream:
-        docs = filename.load_all(stream)
+        docs = yaml.load_all(stream)
         for doc in docs:
             if isinstance(doc, dict):
                 for k,v in doc.items():

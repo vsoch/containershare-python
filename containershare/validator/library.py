@@ -120,10 +120,9 @@ class LibraryValidator:
 
             # Validate name
             bot.test("        Name: %s" % self.metadata['name'])
-
-            if not re.match("^[a-z0-9_-]*$", self.metadata['name']): 
+            name = self.metadata['name'].replace('/','-') # okay to have /
+            if not re.match("^[a-z0-9_-]*$", name): 
                 return notvalid('''invalid characters in %s, only 
-                               lowercase and "-" or "_" allowed.''' %(content['name'])) 
-
+                                   lowercase and "-" or "_" allowed.''' % name)
 
         return True

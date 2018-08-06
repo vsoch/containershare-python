@@ -40,6 +40,7 @@ from containershare.utils import ( clone, read_file )
 from .utils import notvalid
 import requests
 import tempfile
+import shutil
 from glob import glob
 
 
@@ -81,7 +82,7 @@ class RuntimeValidator:
             return False 
         return True
 
-    def _validate_preview(self, url):
+    def _validate_preview(self, url, clean_up=True):
 
         bot.test('Container url: %s' %url)
         org,repo = url.split('/')[-2:]
@@ -104,9 +105,16 @@ class RuntimeValidator:
 
         index = response.text
         tmpdir = tempfile.mkdtemp()
+
+        # Github Pages
         ghpages = clone(url, tmpdir, branch='gh-pages')
         contenders = glob('%s/*' %ghpages)
+
+        # master
+        master = clone(url, tmpdir, branch='master')
+
         license = False
+        readme = False
         found = False
         tags = False
         valid = True
@@ -115,13 +123,10 @@ class RuntimeValidator:
         manifest = False
         inspect = False
 
+        # Testing Github Pages
+        print('Testing Github Pages!')
         for test in contenders:
-            if os.path.isdir(test):
-                continue
-
-            print('...%s' %test)
-            if "LICENSE" in os.path.basename(test):
-                license = True
+            print('   %s' %test)
             if os.path.basename(test) == "index.html":
                 bot.test('Found index file in repository.')
                 found = True
@@ -135,9 +140,23 @@ class RuntimeValidator:
                 bot.test('Found latest inspection in repository.')
                 inspect = True
 
+        contenders = glob('%s/*' %master)
+
+        # Testing Main Repository
+        print('Testing Main Repository master branch!')
+        for test in contenders:
+            print('   %s' %test)
+            if "LICENSE" in os.path.basename(test):
+                license = True
+            if "README" in os.path.basename(test):
+                readme = True
+
         # These are all required!
         if license is False:
             bot.warning("LICENSE file not found, please add a LICENSE")
+            valid = False
+        if readme is False:
+            bot.warning("README file not found, please add a README")
             valid = False
         if tags is False:
             bot.warning("inspect-latest.json not found, required.")
@@ -146,6 +165,10 @@ class RuntimeValidator:
         if manifest is False:
             bot.warning("manifest-latest.json not found, required")
             valid = False
+
+        # Clean up, if desired
+        if clean_up is True:
+            shutil.rmtree(tmpdir)
 
         self._print_valid(valid)
         return valid
